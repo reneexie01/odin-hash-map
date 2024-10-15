@@ -36,6 +36,80 @@ class Hashmap {
                 return null
             }
         }
+        
+        this.has = (key) => {
+            const index = this.hash(key);
+            if (this.object[index]) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        this.remove = (key) => {
+            const index = this.hash(key);
+            if (this.object[index]) {
+                delete this.object[index];
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        this.length = () => {
+            let counter = 0;
+
+            for (let key of this.object) {
+                if (key) {
+                    counter += key.length;
+                }
+            }
+
+            return counter;
+        }
+
+        this.clear = () => {
+            this.object = []
+        }
+
+        this.keys = () => {
+            const array = [];
+
+            for (let bucket of this.object) {
+                if (bucket) {
+                    for (let i = 0; i < bucket.length; i++) {
+                        array.push(bucket[i][0]);
+                    }
+                }
+            }
+            return array;
+        }
+        
+        this.values = () => {
+            const array = [];
+
+            for (let bucket of this.object) {
+                if (bucket) {
+                    for (let i = 0; i < bucket.length; i++) {
+                        array.push(bucket[i][1]);
+                    }
+                }
+            }
+            return array;
+        }
+
+        this.entries = () => {
+            const array = []
+
+            for (let bucket of this.object) {
+                if (bucket) {
+                    for (let i = 0; i < bucket.length; i++) {
+                        array.push(bucket[i]);
+                    }
+                }
+            }
+            return array;
+        }
     }
 
     hash(key) {
@@ -57,6 +131,7 @@ newHashmap.set("Tina", "Scott");
 newHashmap.set("Leya", "Lam");
 newHashmap.set("Renee", "Xie");
 
-console.log(newHashmap.get("Renee"));
-
-newHashmap.print()
+newHashmap.print();
+console.log(newHashmap.keys())
+console.log(newHashmap.values())
+console.log(newHashmap.entries())
