@@ -1,3 +1,5 @@
+/* Classes */
+/*
 class Hashmap {
     constructor() {
         this.object = [];
@@ -147,17 +149,197 @@ class Hashmap {
           hashCode = primeNumber * hashCode + key.charCodeAt(i);
         }
      
-        return hashCode;
+        return hashCode % this.capacity;
     }
 }
 
-const newHashmap = new Hashmap();
+const test = new Hashmap()
 
-newHashmap.set("Logie", "Law");
-newHashmap.set("Tina", "Scott");
-newHashmap.set("Leya", "Lam");
-newHashmap.set("Renee", "Xie");
-newHashmap.set("John", "Smith");
-newHashmap.set("Paul", "Walker");
-newHashmap.set("Patty", "Smith");
-newHashmap.print();
+test.set('apple', 'red')
+test.set('banana', 'yellow')
+test.set('carrot', 'orange')
+test.set('dog', 'brown')
+test.set('elephant', 'gray')
+test.set('frog', 'green')
+test.set('grape', 'purple')
+test.set('hat', 'black')
+test.set('ice cream', 'white')
+test.set('jacket', 'blue')
+test.set('kite', 'pink')
+test.set('lion', 'golden')
+test.set('long', 'nose')
+test.set('black', 'toe')
+test.set('moon', 'silver')
+
+test.print()
+
+*/
+
+
+/* Factory Functions */
+
+function HashMaps() {
+    let object = [];
+    let size = 16;
+
+    const set = (key, value) => {
+        let index = hash(key);
+
+        if (!object[index]) {
+            object[index] = [[key, value]];
+        } else {
+            let inserted = false;
+            for (let i = 0; i < object[index].length; i++) {
+                if (object[index][i][0] === key) {
+                    object[index][i][1] = value;
+                    inserted = true;
+                }
+            }
+            if (inserted === false) {
+                object[index].push([key, value]);
+            }
+        }
+    };
+
+    const get = (key) => {
+        let index = hash(key);
+
+        if (object[index]) {
+            for (let i = 0; i < object[index].length; i++) {
+                if (object[index][i][0] === key) {
+                    return object[index][i][1];
+                } else {
+                    return null;
+                }
+            }
+        } else {
+            return null;
+        }
+    };
+
+    const has = (key) => {
+        let index = hash(key);
+
+        if (object[index]) {
+            for (let i = 0; i < object[index].length; i++) {
+                if (object[index][i][0] === key) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
+    }
+
+    const remove = (key) => {
+        let index = hash(key);
+
+        if (object[index]) {
+            for (let i = 0; i < object[index].length; i++) {
+                if (object[index][i][0] === key) {
+                    delete object[index][i];
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
+    }
+
+    const length = () => {
+        let counter = 0;
+
+        for (let key of object) {
+            if (key) {
+                counter += key.length;
+            }
+        }
+
+        return counter;
+    }
+
+    const clear = () => {
+        object = [];
+    }
+
+    const keys = () => {
+        const array = [];
+
+        for (let key of object) {
+            if (key) {
+               for (let i = 0; i < key.length; i++) {
+                array.push(key[i][0]);
+               }
+            }
+        }
+
+        return array;
+    }
+
+    const values = () => {
+        const array = [];
+
+        for (let key of object) {
+            if (key) {
+               for (let i = 0; i < key.length; i++) {
+                array.push(key[i][1]);
+               }
+            }
+        }
+
+        return array;
+    }
+
+    const entries = () => {
+        const array = [];
+
+        for (let key of object) {
+            if (key) {
+               for (let i = 0; i < key.length; i++) {
+                array.push(key[i]);
+               }
+            }
+        }
+
+        return array;
+    }
+
+    const hash = (key) => {
+        let hashCode = 0;
+      
+        const primeNumber = 31;
+        for (let i = 0; i < key.length; i++) {
+            hashCode = primeNumber * hashCode + key.charCodeAt(i);
+        }
+
+        return hashCode % size;
+    };
+
+    return { object, set, get, has, remove, length, clear, keys, values, entries }
+};
+
+const test = HashMaps();
+
+test.set('apple', 'red')
+test.set('banana', 'yellow')
+test.set('carrot', 'orange')
+test.set('dog', 'brown')
+test.set('elephant', 'gray')
+test.set('frog', 'green')
+test.set('grape', 'purple')
+test.set('hat', 'black')
+test.set('ice cream', 'white')
+test.set('jacket', 'blue')
+test.set('kite', 'pink')
+test.set('lion', 'golden')
+// test.set('long', 'nose')
+// test.set('black', 'toe')
+// test.set('moon', 'silver')
+
+console.log(test.length())
+console.log(test.object)
+console.log(test.entries())
