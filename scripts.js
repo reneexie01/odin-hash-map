@@ -180,13 +180,35 @@ test.print()
 
 function HashMaps() {
     let object = [];
-    let size = 16;
+    let capacity = 16;
+    let size = 0;
+    const loadFactor = 0.75;
+
+    const resize = () => {
+        const oldObject = object;
+        object = [];
+        capacity *= 2;
+        size = 0;
+
+        for (let bucket of oldObject) {
+            if (bucket) {
+                for (let i = 0; i < bucket.length; i++) {
+                    set(bucket[i][0], bucket[i][1]);
+                }
+            }
+        }
+    } // resizing is broken
 
     const set = (key, value) => {
+        if (size > capacity * loadFactor) {
+            resize();
+        }
+
         let index = hash(key);
 
         if (!object[index]) {
             object[index] = [[key, value]];
+            size++;
         } else {
             let inserted = false;
             for (let i = 0; i < object[index].length; i++) {
@@ -197,6 +219,7 @@ function HashMaps() {
             }
             if (inserted === false) {
                 object[index].push([key, value]);
+                size++;
             }
         }
     };
@@ -251,19 +274,12 @@ function HashMaps() {
     }
 
     const length = () => {
-        let counter = 0;
-
-        for (let key of object) {
-            if (key) {
-                counter += key.length;
-            }
-        }
-
-        return counter;
+       return size;
     }
 
     const clear = () => {
         object = [];
+        capacity = 16;
     }
 
     const keys = () => {
@@ -316,7 +332,7 @@ function HashMaps() {
             hashCode = primeNumber * hashCode + key.charCodeAt(i);
         }
 
-        return hashCode % size;
+        return hashCode % capacity;
     };
 
     return { object, set, get, has, remove, length, clear, keys, values, entries }
@@ -336,10 +352,9 @@ test.set('ice cream', 'white')
 test.set('jacket', 'blue')
 test.set('kite', 'pink')
 test.set('lion', 'golden')
-// test.set('long', 'nose')
-// test.set('black', 'toe')
-// test.set('moon', 'silver')
+test.set('moon', 'silver')
+test.set('long', 'nose')
+test.set('black', 'toe')
 
-console.log(test.length())
-console.log(test.object)
+console.log(test.length()); // Should show correct size
 console.log(test.entries())
